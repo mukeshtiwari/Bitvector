@@ -25,6 +25,24 @@ Definition Bitflip (x : Bit) : Bit :=
   | One => Zero
   end.
 
+Lemma and_bit_flip : forall (x : Bit), And x (Bitflip x) = Zero.
+Proof.
+  refine (fun x => match x with
+                | Zero => eq_refl
+                | One => eq_refl
+                end).
+Qed.
+
+Lemma bit_and_flip : forall (x : Bit), And (Bitflip x) x = Zero.
+Proof.
+  refine (fun x => match x with
+                | Zero => eq_refl
+                | One => eq_refl
+                end).
+Qed.
+
+
+
 Definition Bitstream (n : nat) := Vector.t Bit n.
 
 Fixpoint repeatN (n : nat) (x : Bit) : Bitstream n :=
@@ -78,15 +96,16 @@ Definition bitstreamFlip {n : nat} (xs : Bitstream n) : Bitstream n :=
   mapBits Bitflip xs.
 
 
+
 Theorem  compliment_of_each_other :
   forall (n : nat) (xs : Bitstream n), bitstreamAnd xs (bitstreamFlip xs) = allZero n.
 Proof.
   unfold Bitstream; unfold bitstreamAnd; unfold bitstreamFlip;
     unfold zipBits; unfold mapBits; unfold allZero.
   induction xs.
-  + admit.
-  +  
-                                      
+  + auto. 
+  + simpl.
+    
  
   
   
