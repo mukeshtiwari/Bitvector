@@ -83,6 +83,16 @@ Fixpoint map_vector {A B : Type} (f : A -> B) (m : nat) :
    exact (cons _ (f h) _ (map_vector _ _ f m' X)).
 Defined.
 
+Fixpoint append_vector {A : Type} (m n : nat) :
+  Vector.t A m -> Vector.t A n -> Vector.t A (m + n).
+  refine (match m as m' return m' = m -> Vector.t A m' -> Vector.t A n -> Vector.t A (m' + n) with
+          | O => fun H v1 v2 => v2
+          | S m' => fun H v1 v2 => _
+          end eq_refl).
+  inversion v1. exact (cons _ h _ (append_vector _ _ _ X v2)).
+Defined.
+  
+
 Fixpoint matrix_from_vector {A : Type} (m : nat) (n : nat) :
   Vector.t A (m * n) -> Vector.t (Vector.t A n) m.
 Proof.
@@ -96,7 +106,6 @@ Proof.
   pose proof (matrix_from_vector _ _ _ rn) as rt.
   exact (cons _ fn _ rt).
 Defined.
-
 
 Fixpoint to_matrix {A : Type} (m : nat) (n : nat) :
   Vector.t A (m * n) -> Vector.t (Vector.t A n) m.
