@@ -1,5 +1,6 @@
 Require Import
-        Coq.Vectors.Vector.
+        Coq.Vectors.Vector
+        VectorLib.
 
 Inductive Bit := Zero | One.
 
@@ -46,32 +47,6 @@ Fixpoint repeatN (n : nat) (x : Bit) : Bitstream n :=
   | O => nil _
   | S n' => cons _ x _ (repeatN n' x)
   end.
-
-
-
-
-   
- 
-
-Fixpoint zip_vectors {A B C : Type} (f : A -> B -> C)  (m : nat) :
-  Vector.t A m -> Vector.t B m -> Vector.t C m.  
-    refine (match m as m' return m' = m -> Vector.t A m' -> Vector.t B m' -> Vector.t C m' with
-            | O => fun H v1 v2 => @nil C
-            | S m' => fun H v1 v2 => _
-            end eq_refl).    
-    inversion v1; inversion v2; subst. 
-    exact (cons _ (f h h0) _ (zip_vectors _ _ _ f m' X X0)).
-Defined.
-
-Fixpoint map_vector {A B : Type} (f : A -> B) (m : nat) :
-  Vector.t A m -> Vector.t B m.
-   refine (match m as m' return m' = m -> Vector.t A m' -> Vector.t B m' with
-            | O => fun H v1 => @nil B
-            | S m' => fun H v1 => _
-            end eq_refl).
-   inversion v1; subst.
-   exact (cons _ (f h) _ (map_vector _ _ f m' X)).
-Defined.
 
    
 Definition zipBits {n : nat} (f : Bit -> Bit -> Bit) (xs ys : Bitstream n) : Bitstream n :=
