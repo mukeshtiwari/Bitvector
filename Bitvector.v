@@ -55,6 +55,9 @@ Definition zipBits {n : nat} (f : Bit -> Bit -> Bit) (xs ys : Bitstream n) : Bit
 Definition mapBits {n : nat} (f : Bit -> Bit) (xs : Bitstream n) : Bitstream n :=
   map_vector f n xs.
 
+Definition appendBits {n m : nat} (xs : Bitstream n) (ys : Bitstream m) : Bitstream (n + m) :=
+  append_vector n m xs ys.
+  
 (* All bits are zero *)
 Definition allZero (n : nat) := repeatN n Zero. 
 
@@ -71,8 +74,25 @@ Definition bistreamOr {n : nat} (xs ys : Bitstream n) : Bitstream n :=
 Definition bitstreamFlip {n : nat} (xs : Bitstream n) : Bitstream n :=
   mapBits Bitflip xs.
 
+(* n is index. n = 0 means set the 0th bit *)
+Fixpoint setBit {m : nat} (n : nat) : Bitstream (n + S m) -> Bitstream (n + S m).
+  refine (match n as n' return n = n' -> Bitstream (n' + S m) -> Bitstream (n' + S m) with
+          | O => fun H v => _
+          | S n' => fun H v => _
+          end eq_refl); inversion v.
+  + exact (cons _ One _ H1).
+  + exact (cons _ One _ (setBit _ _ H1)).
+Defined.
 
-
+Fixpoint fetchBit {m : nat} (n : nat) : Bitstream (n + S m) -> Bit.
+  refine (match n as n' return n = n' -> Bitstream (n' + S m) -> Bit with
+          | O => fun H v => _
+          | S n' => fun H v => _
+          end eq_refl); inversion v.
+  + exact h.
+  + exact (fetchBit _ _ H1).
+Defined.                                         
+  
 Theorem  compliment_of_each_other :
   forall (n : nat) (xs : Bitstream n), bitstreamAnd xs (bitstreamFlip xs) = allZero n.
 Proof.

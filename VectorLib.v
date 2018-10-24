@@ -119,6 +119,8 @@ Proof.
        exact (IHm X).
 Defined.
 
+
+
 Fixpoint transpose_matrix {A : Type} (m : nat) (n : nat) :
   Vector.t (Vector.t A n) m -> Vector.t (Vector.t A m) n.
 Proof.
@@ -129,7 +131,16 @@ Proof.
     exact (cons _ h _ (transpose_matrix _ _ _ r)).
 Defined.
 
-
+(* 
+Theorem transpose_transepose_identity :
+  forall (A : Type) (n m : nat) (v : Vector.t (Vector.t A n) m),
+    transpose_matrix _ _ (transpose_matrix _ _ v) = v.
+Proof.
+  intros A n m.
+  induction v; cbn; try auto.
+  + 
+*)
+  
 (* Add a correctness Lemma of matrix transpose *)
 
 (*
