@@ -1,9 +1,5 @@
 Require Import
-        Coq.Vectors.Fin
-        Coq.Vectors.Vector
-        Coq.Vectors.VectorDef
-        Coq.Vectors.VectorEq
-        Coq.Vectors.VectorSpec.
+        Coq.Vectors.Vector.
 
 Inductive Bit := Zero | One.
 
@@ -52,12 +48,17 @@ Fixpoint repeatN (n : nat) (x : Bit) : Bitstream n :=
   end.
 
 
-Fixpoint zip_vectors {A B C : Type} (f : A -> B -> C) (m : nat) :
-    Vector.t A m -> Vector.t B m -> Vector.t C m.
+
+
+   
+ 
+
+Fixpoint zip_vectors {A B C : Type} (f : A -> B -> C)  (m : nat) :
+  Vector.t A m -> Vector.t B m -> Vector.t C m.  
     refine (match m as m' return m' = m -> Vector.t A m' -> Vector.t B m' -> Vector.t C m' with
             | O => fun H v1 v2 => @nil C
             | S m' => fun H v1 v2 => _
-            end eq_refl).
+            end eq_refl).    
     inversion v1; inversion v2; subst. 
     exact (cons _ (f h h0) _ (zip_vectors _ _ _ f m' X X0)).
 Defined.
@@ -103,9 +104,12 @@ Proof.
   unfold Bitstream; unfold bitstreamAnd; unfold bitstreamFlip;
     unfold zipBits; unfold mapBits; unfold allZero.
   induction xs.
-  + auto. 
-  + simpl.
-    
+  + auto.
+  + cbn. rewrite IHxs. rewrite and_bit_flip.
+    auto.
+Qed.
+
+
  
   
   
